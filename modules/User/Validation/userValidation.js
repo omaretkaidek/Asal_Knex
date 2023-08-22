@@ -1,14 +1,21 @@
 // userValidation.js
 
-const { body } = require('express-validator');
+const { body, param } = require('express-validator');
 const UserModel = require('../model/userModel');
 
-const id = body('id')
+const id = param('id')
     .custom(async (value, { req }) => {
         if (!Number.isInteger(Number(value))) {
             // If the value isn't an integer, throw an error
             throw new Error('ID must be an integer');
         }
+        // Check if the ID already exists in the database using UserModel's idExists method
+        const exists = await UserModel.idExists(value);
+        if (!exists) {
+            // If a user with the provided ID is found, throw an error
+            throw new Error('ID does not exist in the database');
+        }
+
         // Indicate a successful validation
         return true;
     });
@@ -52,7 +59,12 @@ const updateUservalidation = [
     country
 ]
 
+const idValidation = [
+    id
+]
+
 module.exports = {
     createUservalidation,
     updateUservalidation,
+    idValidation
 };

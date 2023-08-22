@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../Controller/userController');
-const { createUservalidation, updateUservalidation } = require('../Validation/userValidation');
+const { createUservalidation, updateUservalidation, idValidation } = require('../Validation/userValidation');
 
 // Map the HTTP verbs to controller methods
 
@@ -11,12 +11,12 @@ const { createUservalidation, updateUservalidation } = require('../Validation/us
 router.post('/users', createUservalidation, userController.createUser);
 
 // GET request to retrieve a user by ID
-router.get('/users/:id', userController.getUserById);
+router.get('/users/:id', idValidation, userController.getUserById);
 
 // PUT request to update a user by ID
-router.put('/users/:id', updateUservalidation, userController.updateUserById);
+router.put('/users/:id', idValidation, updateUservalidation, userController.updateUserById);
 
 // DELETE request to delete a user by ID
-router.delete('/users/:id', userController.deleteUserById);
+router.delete('/users/:id', idValidation, userController.deleteUserById);
 
 module.exports = router;
